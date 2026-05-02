@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - RafiQ</title>
+    <script>
+    </script>
+    <link rel="stylesheet" href="login_page/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        .otp-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 16px;
+        }
+
+        .otp-card {
+            width: min(920px, 100%);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 28px 60px rgba(0, 0, 0, 0.18);
+            background: rgba(255, 255, 255, 0.97);
+        }
+
+        [data-theme="dark"] .otp-card {
+            background: rgba(22, 27, 34, 0.96);
+            box-shadow: 0 28px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        .otp-hero, .otp-panel {
+            padding: 40px;
+        }
+
+        .otp-hero {
+            background: linear-gradient(145deg, #f59e0b, #ea580c);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .otp-hero h1, .otp-panel h2 {
+            margin: 0;
+        }
+
+        .otp-hero p, .otp-panel p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .otp-meta {
+            display: grid;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .otp-meta div {
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .otp-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .otp-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .btn-secondary {
+            border: none;
+            border-radius: 999px;
+            padding: 14px 22px;
+            font-weight: 700;
+            cursor: pointer;
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        [data-theme="dark"] .btn-secondary {
+            background: #334155;
+            color: #f8fafc;
+        }
+
+        .status-text {
+            min-height: 24px;
+            margin-top: 14px;
+            font-weight: 600;
+        }
+
+        .status-text.error {
+            color: #dc2626;
+        }
+
+        .status-text.success {
+            color: #16a34a;
+        }
+
+        @media (max-width: 860px) {
+            .otp-card {
+                grid-template-columns: 1fr;
+            }
+
+            .otp-hero, .otp-panel {
+                padding: 28px 22px;
+            }
+        }
+    </style>
+</head>
+<body class="login-page otp-page">
+    <div id="themeWidget" class="theme-widget">
+        <span class="icon sun"><i class="fa-solid fa-sun"></i></span>
+        <label class="switch">
+            <input type="checkbox" id="darkToggle">
+            <span class="slider"></span>
+        </label>
+        <span class="icon moon"><i class="fa-solid fa-moon"></i></span>
+    </div>
+
+    <!-- صفحة OTP بسيطة وماشية مع نفس شكل صفحة اللوجين -->
+    <div class="otp-card">
+        <section class="otp-hero">
+            <img src="images/logo.png" alt="RafiQ logo" style="height:44px; width:auto;">
+            <div>
+                <h1>Email Verification</h1>
+                <p>We verified your main credentials. Enter the one-time code we sent to your email to finish signing in.</p>
+            </div>
+            <div class="otp-meta">
+                <div>
+                    <strong>User</strong>
+                    <p id="otpUserName">-</p>
+                </div>
+                <div>
+                    <strong>Sent to</strong>
+                    <p id="otpDeliveryTarget">-</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="otp-panel">
+            <h2>Enter Your Login Code</h2>
+            <p id="otpDescription">Check your inbox for the 5-digit verification code, then enter it below.</p>
+
+            <div class="input-group" style="margin-top: 22px;">
+                <i class="fa-solid fa-envelope-open-text"></i>
+                <input type="text" id="otpCode" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="Enter 5-digit code">
+            </div>
+
+            <div class="status-text" id="otpStatus"></div>
+
+            <div class="otp-actions">
+                <button type="button" class="btn-orange" id="otpSubmitBtn" onclick="submitEmailOtp()">Verify & Continue</button>
+                <button type="button" class="btn-secondary" onclick="cancelEmailOtpFlow()">Back to Login</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="JS/master.js"></script>
+</body>
+</html>

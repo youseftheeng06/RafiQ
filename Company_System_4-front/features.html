@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - Socum</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <style>
+        .logged-in .login_button, 
+        .logged-in .signup_button 
+        {
+            display: none !important;
+        }
+    </style>
+    <link rel="stylesheet" href="CSS/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+
+    <div class="logo">
+        <img src="images/logo.png">
+    </div>
+
+    <span class="Raf">RafiQ</span>
+
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="main.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="features.html">Features</a>
+        <a href="settings.html">Settings</a>
+    </div>
+
+    <a href="login.html" class="login_button">Login</a>
+    <a href="login.html" class="signup_button">Sign Up</a>
+
+</nav>
+
+
+
+<!-- dark mode Start -->
+                <div id="themeWidget" class="theme-widget">
+        
+                <span class="icon sun">
+            <i class="fa-solid fa-sun"></i>
+            </span>
+
+            <label class="switch">
+            <input type="checkbox" id="darkToggle">
+            <span class="slider"></span>
+            </label>
+
+            <span class="icon moon">
+            <i class="fa-solid fa-moon"></i>
+            </span>
+
+        </div>
+        <!-- dark mode End -->
+
+
+
+        
+<!-- HERO -->
+<section class="features-hero">
+
+    <h1>Powerful Features Built for Productivity</h1>
+
+    <p>
+        RafiQ gives you everything you need to manage tasks, teams, and performance in one smart system.
+    </p>
+
+</section>
+
+<!-- FEATURES GRID -->
+<section class="features-page">
+
+    <div class="feature-box">
+        <h3><i class="fas fa-tasks"></i> Task Management</h3>
+        <p>Create, assign, and track tasks easily with real-time updates.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3><i class="fas fa-users"></i> Team Collaboration</h3>
+        <p>Work with your team in one place without confusion or delay.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3><i class="fas fa-chart-line"></i> Smart Analytics</h3>
+        <p>Understand performance and improve productivity with insights.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3><i class="fas fa-bolt"></i> Fast Workflow</h3>
+        <p>Speed up your daily operations with optimized workflows.</p>
+    </div>
+
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="features-page">
+
+    <div class="feature-box">
+        <h3>1. Create Project</h3>
+        <p>Start by creating your workspace or project.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>2. Add Team</h3>
+        <p>Invite your team members and assign roles.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>3. Track Progress</h3>
+        <p>Monitor tasks and see real-time progress updates.</p>
+    </div>
+
+</section>
+
+<!-- BENEFITS -->
+<section class="features-page">
+
+    <div class="feature-box">
+        <h3>Save Time</h3>
+        <p>Reduce manual work and increase efficiency.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>Boost Productivity</h3>
+        <p>Help teams focus on what matters most.</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>Secure System</h3>
+        <p>Your data is safe and encrypted.</p>
+    </div>
+
+</section>
+
+<!-- CTA -->
+<section class="features-hero">
+
+    <h1>Ready to Get Started?</h1>
+
+    <p>Join Socum today and improve your team's productivity.</p>
+
+    <a href="login.html" class="signup_button">Start Now</a>
+
+</section>
+
+<script src="JS/master.js"></script>
+</body>
+</html>

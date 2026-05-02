@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <style>
+        .logged-in .login_button, 
+        .logged-in .signup_button 
+        {
+            display: none !important;
+        }
+    </style>
+
+    <link rel="stylesheet" href="CSS/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+
+    
+    <!-- ================= DARK MODE ================= -->
+<div id="themeWidget" class="theme-widget">
+
+    <span class="icon sun">
+        <i class="fa-solid fa-sun"></i>
+    </span>
+
+    <label class="switch">
+        <input type="checkbox" id="darkToggle">
+        <span class="slider"></span>
+    </label>
+
+    <span class="icon moon">
+        <i class="fa-solid fa-moon"></i>
+    </span>
+
+</div>
+
+<div class="pp">
+<!-- COVER -->
+<div class="cover" id="cover"></div>
+
+<input type="file" id="imageInput" accept="image/*" hidden>
+<input type="file" id="coverInput" accept="image/*" hidden>
+
+<div class="layout">
+
+    <!-- MAIN -->
+    <div class="profile-main">
+
+        <div class="profile-card">
+
+            <!-- AVATAR -->
+            <div class="avatar-box">
+                <img id="profileImage" src="images/default.png">
+
+                <label class="upload-btn" id="cameraBtn">
+                    <i class="fa fa-camera"></i>
+                </label>
+
+                <div class="upload-menu" id="uploadMenu" style="display:none;">
+                    <div class="choosing">
+                        <!-- PROFILE -->
+                        <div id="chooseProfile" class="choose-item">
+                            <i class="fa fa-user"></i> Change Profile Photo
+                        </div>
+                        <div onclick="removeProfilePhoto()" class="remove-item">
+                            <i class="fa fa-trash"></i> Remove Profile Photo
+                        </div>
+
+                        <hr style="border: 0.5px solid #eee; margin: 8px 0;">
+
+                        <!-- COVER -->
+                        <div id="chooseCover" class="choose-item">
+                            <i class="fa fa-image"></i> Change Cover Photo
+                        </div>
+                        <div onclick="removeCoverPhoto()" class="remove-item">
+                            <i class="fa fa-trash"></i> Remove Cover Photo
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="displayName">Your Name</h2>
+
+            <!-- STATS -->
+            <div class="stats">
+                <div><span>120</span><p>Posts</p></div>
+                <div><span>2.5K</span><p>Followers</p></div>
+                <div><span>180</span><p>Following</p></div>
+            </div>
+
+            <!-- TABS -->
+            <div class="tabs">
+                <button onclick="showTab('about')">About</button>
+                <button onclick="showTab('posts')">Posts</button>
+                <button onclick="showTab('settings')">Settings</button>
+            </div>
+
+            <!-- ABOUT -->
+            <div id="about" class="tab active">
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="nameInput">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="emailInput">
+                </div>
+
+                <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+
+            </div>
+
+            <!-- POSTS -->
+            <div id="posts" class="tab">
+
+            <!-- CREATE POST -->
+            <div class="create-post">
+                <textarea id="postInput" placeholder="What's on your mind?"></textarea>
+                <button onclick="addPost()">Post</button>
+            </div>
+
+            <!-- FEED -->
+            <div id="postList"></div>
+
+        </div>
+
+            <!-- SETTINGS -->
+            <div id="settings" class="tab">
+                <p>Settings coming soon...</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="side-card">
+            <h3>Profile Strength</h3>
+            <p>Complete your profile</p>
+        </div>
+
+        <div class="side-card">
+            <h3>Suggestions</h3>
+            <p>People you may know</p>
+        </div>
+
+    </div>
+
+</div>
+</div>
+<script src="JS/master.js"></script>
+</body>
+</html>

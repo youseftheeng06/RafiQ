@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Socum</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <style>
+        .logged-in .login_button, 
+        .logged-in .signup_button 
+        {
+            display: none !important;
+        }
+    </style>
+    <link rel="stylesheet" href="CSS/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+
+    <div class="logo">
+        <img src="images/logo.png" alt="logo">
+    </div>
+
+    <span class="Raf">RafiQ</span>
+
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="main.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="features.html">Features</a>
+        <a href="settings.html">Settings</a>
+    </div>
+
+    <a href="login.html" class="login_button">Login</a>
+    <a href="signin.html" class="signup_button">Sign Up</a>
+
+</nav>
+
+
+<!-- dark mode Start -->
+                <div id="themeWidget" class="theme-widget">
+        
+                <span class="icon sun">
+            <i class="fa-solid fa-sun"></i>
+            </span>
+
+            <label class="switch">
+            <input type="checkbox" id="darkToggle">
+            <span class="slider"></span>
+            </label>
+
+            <span class="icon moon">
+            <i class="fa-solid fa-moon"></i>
+            </span>
+
+        </div>
+        <!-- dark mode End -->
+         
+<!-- HERO -->
+<section class="about-hero">
+    <h1>We build <span>smart tools</span> for modern teams</h1>
+    <p>
+        RafiQ helps teams stay organized, productive, and connected.
+        Everything you need in one simple platform.
+    </p>
+</section>
+
+<!-- MISSION -->
+<section class="about-mission">
+    <h2>Our Mission</h2>
+    <p>
+        Our mission is to simplify teamwork by providing powerful tools
+        that improve communication, task management, and productivity.
+    </p>
+</section>
+
+<!-- FEATURES -->
+<section class="about-features">
+
+    <div class="about-card">
+        <h3><i class="fas fa-bolt"></i> Fast Workflow</h3>
+        <p>Manage tasks quickly with a clean and simple interface.</p>
+    </div>
+
+    <div class="about-card">
+        <h3><i class="fas fa-users"></i> Team Collaboration</h3>
+        <p>Work with your team in real-time without confusion.</p>
+    </div>
+
+    <div class="about-card">
+        <h3><i class="fas fa-chart-line"></i> Analytics</h3>
+        <p>Track performance and improve productivity.</p>
+    </div>
+
+</section>
+
+<!-- WHY -->
+<section class="about-why">
+    <h2>Why choose RafiQ?</h2>
+    <ul>
+        <li>✔ Easy to use</li>
+        <li>✔ Fast performance</li>
+        <li>✔ Clean design</li>
+        <li>✔ Built for teams</li>
+    </ul>
+</section>
+
+<!-- STATS -->
+<section class="about-stats">
+
+    <div class="stat">
+        <h3>10K+</h3>
+        <p>Users</p>
+    </div>
+
+    <div class="stat">
+        <h3>500+</h3>
+        <p>Teams</p>
+    </div>
+
+    <div class="stat">
+        <h3>99%</h3>
+        <p>Satisfaction</p>
+    </div>
+
+</section>
+<script src="JS/master.js"></script>
+</body>
+</html>
