@@ -52,7 +52,6 @@ public class Post {
     @Column(name = "media_type")
     private String mediaType;
 
-    @Lob
     @Column(name = "media_data")
     @JsonIgnore
     private byte[] mediaData;

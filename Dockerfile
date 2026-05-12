@@ -24,4 +24,4 @@ ENV SPRING_PROFILES_ACTIVE=prod
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-Xmx384m", "-Xms384m", "-XX:+UseContainerSupport", "-Djava.security.egd=file:/dev/./urandom", "-Dserver.port=${PORT:8080}", "-jar", "/app/app.jar"]

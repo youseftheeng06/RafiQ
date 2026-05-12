@@ -46,7 +46,6 @@ public class User {
     @Column(nullable = false, unique = true, length = 32)
     private String staffId;
 
-    @Lob
     @Column(name = "profile_photo_data")
     @JsonIgnore
     private byte[] profilePhotoData;
@@ -54,7 +53,6 @@ public class User {
     @Column(name = "profile_photo_type")
     private String profilePhotoType;
 
-    @Lob
     @Column(name = "cover_photo_data")
     @JsonIgnore
     private byte[] coverPhotoData;

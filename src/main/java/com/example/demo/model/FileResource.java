@@ -40,7 +40,6 @@ public class FileResource {
     @Column(nullable = false)
     private String filePath;
 
-    @Lob
     @Column(name = "file_data", nullable = false)
     @JsonIgnore
     private byte[] fileData;
