@@ -25,31 +25,29 @@ import com.zaxxer.hikari.HikariDataSource;
 public class ProdDataSourceConfig {
 
     @Bean
-    public DataSource prodDataSource(Environment env) {
+    @Primary
+    public DataSource dataSource(Environment env) {
         String jdbcUrl = env.getProperty("spring.datasource.url", "");
         String username = env.getProperty("spring.datasource.username", "");
         String password = env.getProperty("spring.datasource.password", "");
 
+        HikariDataSource ds = new HikariDataSource();
+        ds.setDriverClassName("org.postgresql.Driver");
+
         if (StringUtils.hasText(jdbcUrl) && jdbcUrl.startsWith("jdbc:postgresql:")) {
-            return DataSourceBuilder.create()
-                    .type(HikariDataSource.class)
-                    .url(jdbcUrl)
-                    .username(username)
-                    .password(password)
-                    .driverClassName("org.postgresql.Driver")
-                    .build();
+            ds.setJdbcUrl(jdbcUrl);
+            ds.setUsername(username);
+            ds.setPassword(password);
+            return ds;
         }
 
         String databaseUrl = env.getProperty("DATABASE_URL", "");
         if (StringUtils.hasText(databaseUrl)) {
             Map<String, String> p = parsePostgresDatabaseUrl(databaseUrl.trim());
-            return DataSourceBuilder.create()
-                    .type(HikariDataSource.class)
-                    .url(p.get("url"))
-                    .username(p.get("username"))
-                    .password(p.get("password"))
-                    .driverClassName("org.postgresql.Driver")
-                    .build();
+            ds.setJdbcUrl(p.get("url"));
+            ds.setUsername(p.get("username"));
+            ds.setPassword(p.get("password"));
+            return ds;
         }
 
         String pgHost = env.getProperty("PGHOST", "");
@@ -59,13 +57,10 @@ public class ProdDataSourceConfig {
             String pgUser = env.getProperty("PGUSER", "");
             String pgPass = env.getProperty("PGPASSWORD", "");
             String built = "jdbc:postgresql://" + pgHost + ":" + pgPort + "/" + pgDb;
-            return DataSourceBuilder.create()
-                    .type(HikariDataSource.class)
-                    .url(built)
-                    .username(pgUser)
-                    .password(pgPass)
-                    .driverClassName("org.postgresql.Driver")
-                    .build();
+            ds.setJdbcUrl(built);
+            ds.setUsername(pgUser);
+            ds.setPassword(pgPass);
+            return ds;
         }
 
         throw new IllegalStateException(
