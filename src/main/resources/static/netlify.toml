@@ -1,0 +1,7 @@
+# Netlify publishes this folder as static files when you select Company_System_4-front as publish root.
+#
+# Backend API origin: edit JS/rafiq-deploy-config.js (set window.__RAFIQ_API_ORIGIN__) before deploy.
+# This project uses explicit *.html routes (dashboard.html, login.html, …) — no SPA fallback here.
+
+[build]
+  publish = "."

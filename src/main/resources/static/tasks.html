@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks - Socum</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="CSS/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="workspace-ui">
+
+<nav class="navbar">
+    <div class="logo"><img src="images/logo.png"></div>
+    <span class="Raf">RafiQ</span>
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="main.html">Home</a>
+        <a href="room.html">Rooms</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="statistics.html">Statistics</a>
+        <a href="employees.html">Employees</a>
+        <a href="settings.html">Settings</a>
+
+    </div>
+    <div class="notification-bell" id="notificationBell">
+        <button class="notification-bell-btn" type="button" onclick="toggleNotifDropdown()" aria-label="Notifications">
+            <i class="fa-solid fa-bell" id="bellIcon"></i>
+            <span id="notifBadge" class="notif-badge">0</span>
+        </button>
+        <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-dropdown-head">
+                <span>Notifications</span>
+                <div class="notif-head-actions">
+                    <button type="button" onclick="markAllNotificationsRead(event)">Read all</button>
+                    <button type="button" onclick="clearAllNotifications(event)">Clear</button>
+                </div>
+            </div>
+            <ul id="notifList" class="notif-list"></ul>
+        </div>
+    </div>
+    <a href="login.html" class="login_button">Login</a>
+    <a href="login.html" class="signup_button">Sign Up</a>
+</nav>
+
+<div id="themeWidget" class="theme-widget">
+    <span class="icon sun"><i class="fa-solid fa-sun"></i></span>
+    <label class="switch">
+        <input type="checkbox" id="darkToggle">
+        <span class="slider"></span>
+    </label>
+    <span class="icon moon"><i class="fa-solid fa-moon"></i></span>
+</div>
+
+<section class="tasks-container app-shell">
+    <div class="dashboard-hero">
+        <div>
+            <span class="eyebrow">Task command center</span>
+            <h1>Tasks</h1>
+            <p>Create assignments, monitor ownership, and clear team notifications without leaving the flow.</p>
+        </div>
+        <a href="statistics.html" class="hero-action">
+            <i class="fa-solid fa-chart-simple"></i>
+            Statistics
+        </a>
+    </div>
+
+    <div class="task-input task-compose">
+        <input id="taskTitle"           placeholder="Title">
+        <input id="taskDesc"            placeholder="Description">
+        <input id="taskAssigneeStaffId" placeholder="Assign to Staff ID">
+        <input id="taskDeadline" type="datetime-local" step="1">
+        <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <div class="task-filter-bar" aria-label="Task filters">
+        <button type="button" data-task-filter-button="all" onclick="setTaskFilter('all')">All <span id="filterAllCount">0</span></button>
+        <button type="button" data-task-filter-button="pending" onclick="setTaskFilter('pending')">Pending <span id="filterPendingCount">0</span></button>
+        <button type="button" data-task-filter-button="in_progress" onclick="setTaskFilter('in_progress')">In Progress <span id="filterProgressCount">0</span></button>
+        <button type="button" data-task-filter-button="completed" onclick="setTaskFilter('completed')">Completed <span id="filterCompletedCount">0</span></button>
+    </div>
+    <div id="activeTaskScope" class="active-task-scope"></div>
+
+    <ul id="taskList"></ul>
+
+    
+
+</section>
+<div id="toast-container"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="JS/rafiq-deploy-config.js"></script>
+<script src="JS/master.js"></script>
+</body>
+</html>

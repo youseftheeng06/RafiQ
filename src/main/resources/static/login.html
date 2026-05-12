@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - RafiQ</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <style>
+        .logged-in .login_button, 
+        .logged-in .signup_button 
+        {
+            display: none !important;
+        }
+    </style>
+    <link rel="stylesheet" href="login_page/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<body class="login-page">
+
+    <!-- الدارك مود -->
+    <div id="themeWidget" class="theme-widget">
+        <span class="icon sun"><i class="fa-solid fa-sun"></i></span>
+        <label class="switch">
+            <input type="checkbox" id="darkToggle">
+            <span class="slider"></span>
+        </label>
+        <span class="icon moon"><i class="fa-solid fa-moon"></i></span>
+    </div>
+
+    <button class="home_button">
+        <a href="main.html" class="home-btn">
+            <i class="fa-solid fa-house"></i>
+        </a>
+    </button>
+
+    <input type="checkbox" id="change-form" style="display:none;">
+
+    <div class="main-wrapper">
+        <div class="container">
+
+            <!-- ================= تسجيل الدخول ================= -->
+            <div class="form-container sign-in-container">
+                <form>
+                    <h2 class="form-title">Welcome back!</h2>
+                    
+                    <div class="input-group">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="text" id="loginEmail" placeholder="Email">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="loginUsername" placeholder="Username">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-solid fa-id-card"></i>
+                        <input type="text" id="loginStaffId" placeholder="Staff ID (Check Email)">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="Password">
+                    </div>
+
+                    <div class="form-helper-row">
+                        <a href="forgot-password.html" class="forgot-link">
+                            <i class="fa-solid fa-key"></i>
+                            <span>Forgot your password?</span>
+                        </a>
+                    </div>
+
+                    <button type="button" class="btn-orange" onclick="triggerLogin()">Sign In</button>
+
+                    <!-- هنا ضفنا أزرار اللوجين بـ Google و GitHub جوه الفورم -->
+                    <div class="social-login-block">
+                        <div class="social-divider">
+                            <span>or continue with</span>
+                        </div>
+
+                        <div class="social-login-grid">
+                            <button type="button" class="social-login-btn google-login" onclick="startSocialLogin('google')">
+                                <i class="fa-brands fa-google"></i>
+                                <span>Google</span>
+                            </button>
+
+                            <button type="button" class="social-login-btn github-login" onclick="startSocialLogin('github')">
+                                <i class="fa-brands fa-github"></i>
+                                <span>GitHub</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <label for="change-form" class="mobile-only-link">Create Account</label>
+                </form>
+            </div>
+
+            <!-- ================= إنشاء حساب ================= -->
+            <div class="form-container sign-up-container">
+                <form>
+                    <h2 class="form-title">Create Account</h2>
+                    
+                    <div class="input-group">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="regName" placeholder="Full Name">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="text" id="regEmail" placeholder="Email">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <select id="regRole" style="width:100%; border:none; outline:none; background:transparent; cursor:pointer;">
+                            <option value="DEVELOPER">Employee (Developer)</option>
+                            <option value="TEAM_LEADER">Team Leader</option>
+                            <option value="MANAGER">Manager</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="regPass" placeholder="Password" aria-describedby="regPassHint">
+                    </div>
+                    <p id="regPassHint" class="hint-text" style="font-size:0.82rem;color:#64748b;margin:0.35rem 0 0;line-height:1.35;">
+                        Strong password: 9+ characters, uppercase &amp; lowercase, a number, and a symbol.
+                    </p>
+
+                    <button type="button" class="btn-orange" onclick="triggerRegister()">Sign Up</button>
+                    
+                    <label for="change-form" class="mobile-only-link">Sign In</label>
+                </form>
+            </div>
+
+            
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <img src="images/logo.png" style="height:40px">
+                  
+                        <h1>Already a Member?</h1>
+                        <p>Login with your Staff ID to start working</p>
+                        <div class="si_pt">
+                            <label for="change-form" class="btn-white">Sign In</label>
+                            </div>
+                           
+                    </div>
+
+                    <div class="overlay-panel overlay-right">
+                        <img src="images/logo.png" style="height:40px">
+                        <h2>New Here?</h2>
+                        <p>Sign up and we will email your Staff ID</p>
+                        <label for="change-form" class="btn-white">Sign Up</label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="toast-container"></div>
+    <script src="JS/rafiq-deploy-config.js"></script>
+    <script src="JS/master.js"></script>
+</body>
+</html>

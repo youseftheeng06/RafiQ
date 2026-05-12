@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees - Socum</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <style>
+        .logged-in .login_button, 
+        .logged-in .signup_button 
+        {
+            display: none !important;
+        }
+    </style>
+    <link rel="stylesheet" href="CSS/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="employees-page workspace-ui">
+
+<!-- NAV -->
+ <nav class="navbar">
+
+            <div class="logo">
+                <img src="images/logo.png">
+            </div>
+            
+            <span class="Raf">RafiQ</span>
+            <div class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="main.html">Home</a>
+                <a href="settings.html">Settings</a>
+            </div>
+
+            <a href="login.html" class="login_button">Login</a>
+            <a href="login.html" class="signup_button">Sign Up</a>
+
+        </nav>
+
+
+
+        <!-- dark mode Start -->
+                <div id="themeWidget" class="theme-widget">
+        
+                <span class="icon sun">
+            <i class="fa-solid fa-sun"></i>
+            </span>
+
+            <label class="switch">
+            <input type="checkbox" id="darkToggle">
+            <span class="slider"></span>
+            </label>
+
+            <span class="icon moon">
+            <i class="fa-solid fa-moon"></i>
+            </span>
+
+        </div>
+        <!-- dark mode End -->
+
+
+        
+<!-- EMPLOYEES -->
+<section class="employees-container app-shell">
+
+    <div class="employees-hero">
+        <div>
+            <span class="eyebrow">Team directory</span>
+            <h1>Employees</h1>
+            <p>Review team members, roles, and manager actions from the same workspace style as the dashboard.</p>
+        </div>
+    </div>
+
+    <!-- EMPLOYEES LIST -->
+    <div id="empList" class="emp-grid"></div>
+    <div id="toast-container"></div>
+
+</section>
+
+<script src="JS/rafiq-deploy-config.js"></script>
+<script src="JS/master.js"></script>
+</body>
+</html>

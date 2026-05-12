@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socum - All in one workspace</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <script src="">
+
+    </script>
+    <style>
+        .logged-in .login_button, 
+        .logged-in .signup_button 
+        {
+            display: none !important;
+        }
+
+
+    </style>
+    <link rel="stylesheet" href="CSS/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Nav Bar -->
+                <nav class="navbar">
+
+            <div class="logo">
+                <img src="images/logo.png">
+            </div>
+            
+            <span class="Raf">RafiQ</span>
+            <div class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="main.html">Home</a>
+                <a href="profile.html">Profile</a>
+            </div>
+            
+            <a href="login.html" class="login_button">Login</a>
+            <a href="login.html" class="signup_button">Sign Up</a>
+
+            <a href="profile.html" class="nav-profile">
+
+            <div class="nav-avatar">
+                <img src="" id="navUserAvatar">
+            </div>
+
+    <span id="navUserName">Guest</span>
+
+</a>
+
+              <!-- Prayer Widget Start -->
+<div class="prayer-wrapper">
+    <button id="prayerBtn" class="prayer-nav-icon">
+        <i class="fa-solid fa-mosque"></i>
+    </button>
+
+    <div id="prayerTab" class="prayer-panel">
+        <!-- الجزء العلوي (زي الصورة) -->
+        <div class="prayer-top-row">
+            <div class="countdown-section">
+                <span class="label">بعد</span>
+                <span id="nextPrayerTimeLeft" class="timer">00:00:00</span>
+            </div>
+            <div class="next-prayer-info">
+                <div class="next-details">
+                    <h4 id="nextPrayerName">--</h4>
+                    <span id="nextPrayerTime">--:--</span>
+                </div>
+                <div class="date-badge">
+                    <span id="hijriDay">--</span>
+                    <small id="hijriMonth">--</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- الجزء السفلي (جدول المواعيد) -->
+        <div class="prayer-grid">
+            <div class="p-item" id="item-Isha"><span>العشاء</span><b id="time-Isha">--:--</b></div>
+            <div class="p-item" id="item-Maghrib"><span>المغرب</span><b id="time-Maghrib">--:--</b></div>
+            <div class="p-item active" id="item-Asr"><span>العصر</span><b id="time-Asr">--:--</b></div>
+            <div class="p-item" id="item-Dhuhr"><span>الظهر</span><b id="time-Dhuhr">--:--</b></div>
+            <div class="p-item" id="item-Sunrise"><span>الشروق</span><b id="time-Sunrise">--:--</b></div>
+            <div class="p-item" id="item-Fajr"><span>الفجر</span><b id="time-Fajr">--:--</b></div>
+        </div>
+    </div>
+</div>
+
+<!-- نافذة التنبيه المخصصة -->
+<div id="customPrayerAlert" class="prayer-alert-box">
+    <div class="alert-icon"><i class="fa-solid fa-mosque"></i></div>
+    <div class="alert-text">
+        <h3 id="alertPrayerNameAr">أذان العصر</h3>
+        <p>حان الآن موعد الأذان حسب توقيت الجيزة</p>
+    </div>
+    <button id="closeAlertBtn">إيقاف الصوت وإغلاق</button>
+</div>
+<!-- Prayer Widget End -->
+
+<!-- صوت الأذان أو التنبيه -->
+<audio id="prayerAudio" src="audio/azan2.mp3"></audio>   
+
+          
+        </nav>
+        
+        <!-- dark mode Start -->
+                <div id="themeWidget" class="theme-widget">
+        
+                <span class="icon sun">
+            <i class="fa-solid fa-sun"></i>
+            </span>
+
+            <label class="switch">
+            <input type="checkbox" id="darkToggle">
+            <span class="slider"></span>
+            </label>
+
+            <span class="icon moon">
+            <i class="fa-solid fa-moon"></i>
+            </span>
+
+        </div>
+        <!-- dark mode End -->
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                One to rule them all – <br>
+                <span>we connect your team.</span>
+            </h1>
+
+            <p>
+                The most efficient way of communication and task management for modern companies.
+            </p>
+
+            <div class="hero-actions">
+                <a href="login.html" style="text-decoration: none;">
+                    <button class="btn-yellow-large" onclick="window.location.href='login.html'">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-image">
+            <img src="images/one.jpg" alt="App Preview">
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="features">
+
+        <div class="section-title">
+            <h2>Everything you need in one place</h2>
+        </div>
+
+        <div class="features-grid">
+
+            <div class="feature-card">
+                <i class="fas fa-tasks"></i>
+                <h3>Task Management</h3>
+                <p>Organize, assign, and track tasks with ease. Never miss a deadline again.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-comments"></i>
+                <h3>Real-time Chat</h3>
+                <p>Built-in communication for teams to stay connected and move faster.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Team Analytics</h3>
+                <p>Get insights into your team's productivity and project progress.</p>
+            </div>
+
+        </div>
+    </section>
+    
+
+
+
+<!-- about Start -->
+<section id="about" class="about-premium-section">
+    <div class="container-full">
+        <!-- Title Header -->
+        <div class="header-content">
+            <h2 class="reveal">OUR IDENTITY</h2>
+            <div class="diamond-divider">
+                <span></span><i class="fas fa-microchip"></i><span></span>
+            </div>
+            <p>Advanced system solutions for modern corporate management</p>
+        </div>
+
+        <!-- The Yellow Box Area -->
+        <div class="features-wrapper-yellow">
+            <div class="features-grid-modern">
+                
+                <!-- Box 1 -->
+                <div class="modern-card">
+                    <div class="card-inner">
+                        <div class="diamond-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h3>Who We Are?</h3>
+                        <p>A specialized tech team providing high-end infrastructure for digital workspaces and team collaboration.</p>
+                    </div>
+                </div>
+
+                <!-- Box 2 -->
+                <div class="modern-card">
+                    <div class="card-inner">
+                        <div class="diamond-icon">
+                            <i class="fas fa-comments-dollar"></i>
+                        </div>
+                        <h3>What We Do?</h3>
+                        <p>We build secure real-time chat engines, video meeting platforms, and AI-driven management dashboards.</p>
+                    </div>
+                </div>
+
+                <!-- Box 3 -->
+                <div class="modern-card">
+                    <div class="card-inner">
+                        <div class="diamond-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3>Why We Do It?</h3>
+                        <p>To empower businesses with tools that make management effortless and communication instant across the globe.</p>
+                    </div>
+                </div>
+
+                <!-- Box 4 -->
+                <div class="modern-card">
+                    <div class="card-inner">
+                        <div class="diamond-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h3>Our Legacy</h3>
+                        <p>Established in 2015, we have consistently delivered 99.9% uptime for our corporate partners worldwide.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="skills-dark-zone">
+            <h2>System Power & Performance</h2>
+            <div class="skills-bars-grid">
+                <div class="bar-item">
+                    <div class="label-box"><span>Chat Latency</span> <span>98%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 98%;"></div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="label-box"><span>Meeting Quality</span> <span>95%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 95%;"></div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="label-box"><span>Data Encryption</span> <span>100%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 100%;"></div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="label-box"><span>Ease of Use</span> <span>90%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 90%;"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Advanced Scroll Button -->
+<div id="backToTop" class="floating-scroll-btn">
+    <div class="diamond-btn">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+</div>
+<!-- About End -->
+
+
+<!-- File download Start -->
+<!-- Download PDF Section -->
+<section class="pdf-premium-section">
+    <div class="container-full">
+        
+        <!-- Header (نفس ستايل الـ About) -->
+        <div class="header-content">
+            <h2 class="reveal">RESOURCES</h2>
+            <div class="diamond-divider">
+                <span></span><i class="fas fa-file-pdf"></i><span></span>
+            </div>
+            <p>Get our latest system documentation and technical guides</p>
+        </div>
+
+        <!-- Download Banner Card (مصمم بنفس روح الـ Modern Card) -->
+        <div class="download-banner-card">
+            <div class="banner-inner">
+                <div class="banner-info">
+                    <h3>Download Our PDF Guide</h3>
+                    <p>Inspired by advanced technology and professional standards. You can explore all our system features, meeting protocols, and security standards in one document.</p>
+                </div>
+                
+                <div class="banner-action-area">
+                    <!-- الزرار واخد شكل المعين في الـ Icon وحركة الـ About -->
+                    <a href="Report/RafiQ_Virtual_Office_Report.docx" download class="premium-download-btn">
+                        <div class="btn-diamond-icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <span>DOWNLOAD NOW</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+ <!-- File download End -->
+
+ <!-- Services Start -->
+  <!-- Services Section -->
+<section id="services" class="services-premium-section">
+    <div class="container-full">
+        
+        <!-- Header (نفس ستايل الـ About) -->
+        <div class="header-content">
+            <h2 class="reveal">SERVICES</h2>
+            <div class="diamond-divider">
+                <span></span><i class="fas fa-cogs"></i><span></span>
+            </div>
+            <p>What we really know how to provide for your business efficiency</p>
+        </div>
+
+        <!-- The Yellow Wrapper -->
+        <div class="features-wrapper-yellow">
+            <div class="features-grid-modern">
+                
+                <!-- Service 1: Chat System -->
+                <div class="modern-card">
+                    <div class="card-inner">
+                        <div class="diamond-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Chat Engine</h3>
+                        <p>High-speed internal messaging system with end-to-end encryption to keep your data secure.</p>
+                    </div>
+                </div>
+
+                <!-- Service 2: Video Meetings -->
+                <div class="modern-card">
+                    <div class="card-inner">
+                        <div class="diamond-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h3>Video Meetings</h3>
+                        <p>Integrated HD video conferencing with screen sharing and recording for professional collaboration.</p>
+                    </div>
+                </div>
+
+                <!-- Service 3: Cloud Hosting -->
+                <div class="modern-card">
+                    <div class="card-inner">
+                        <div class="diamond-icon">
+                             <i class="fas fa-chart-bar"></i>
+                        </div>
+                         <h3>Statistics</h3>
+                            <p>Advanced statistical analysis and data visualization to help businesses make smarter decisions.</p>
+                        
+                    </div>
+                </div>
+
+                <!-- Service 4: Task Management -->
+                <div class="modern-card">
+                    <div class="card-inner">
+                        <div class="diamond-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>Task Tracking</h3>
+                        <p>Advanced dashboards to monitor employee performance and project deadlines in real-time.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Contact Us Button  -->
+            <div class="services-action">
+                <a href="#contact" class="contact-trigger-btn">
+                    CONTACT US
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+  <!-- Services End -->
+
+  <!-- our work Start  -->
+   <section id="works" class="works-premium-section">
+    <div class="container-full">
+        
+        <!-- Header -->
+        <div class="header-content">
+            <h2 class="reveal">OUR WORKS</h2>
+            <div class="diamond-divider">
+                <span></span><i class="fas fa-layer-group"></i><span></span>
+            </div>
+            <p>Exploring our high-performance system modules and interfaces</p>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">ALL PROJECTS</button>
+            <button class="filter-btn" data-filter="calls">MEETINGS</button>
+            <button class="filter-btn" data-filter="chat">MESSAGING</button>
+            <button class="filter-btn" data-filter="dash">DASHBOARDS</button>
+        </div>
+
+        <!-- Works Grid (8 Items) -->
+        <div class="works-grid">
+            
+            <!-- Item 1: Team Meeting -->
+            <div class="work-item" data-category="calls">
+                <img src="data:image/jpeg;base64,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" alt="Video Conference">
+                <div class="work-overlay">
+                    <div class="diamond-icon"><i class="fas fa-video"></i></div>
+                    <h4>Team Briefing</h4>
+                    <span>Meeting Module</span>
+                </div>
+            </div>
+
+            <!-- Item 2: Mobile Chat -->
+            <div class="work-item" data-category="chat">
+                <img src="../Company_System_4-front/images/four.jpg" alt="Chat Mobile">
+                <div class="work-overlay">
+                    <div class="diamond-icon"><i class="fas fa-comments"></i></div>
+                    <h4>Instant Chat</h4>
+                    <span>Mobile Interface</span>
+                </div>
+            </div>
+
+            
+
+            
+
+            
+
+            <!-- Item 6: Team Collaboration -->
+            <div class="work-item" data-category="calls">
+                <img src="../Company_System_4-front/images/five.jpg" alt="Office Collaboration">
+                <div class="work-overlay">
+                    <div class="diamond-icon"><i class="fas fa-users"></i></div>
+                    <h4>Workspace</h4>
+                    <span>Collaborative UI</span>
+                </div>
+            </div>
+
+            <!-- Item 7: HD Meeting Screen -->
+            <div class="work-item" data-category="calls">
+                <img src="../Company_System_4-front/images/twp.jpg" alt="Meeting UI">
+                <div class="work-overlay">
+                    <div class="diamond-icon"><i class="fas fa-desktop"></i></div>
+                    <h4>HD Streaming</h4>
+                    <span>Video Protocols</span>
+                </div>
+            </div>
+
+            
+
+        </div>
+    </div>
+</section>
+  <!-- Our work End -->
+
+<!-- fun facts Start -->
+ <!-- Fun Facts Section -->
+<section class="facts-premium-section">
+    <div class="overlay"></div> 
+    <div class="container-full">
+        
+        <!-- Header  -->
+        <div class="header-content light-text">
+            <h2>SOME FUN FACTS</h2>
+            <div class="diamond-divider">
+                <span></span><i class="fas fa-chart-bar"></i><span></span>
+            </div>
+            <p>Real-time statistics about our system performance and community</p>
+        </div>
+
+     <!-- Facts Grid -->
+        <div class="facts-grid">
+            
+            <!-- Fact 1: Users -->
+            <div class="fact-item">
+                <div class="diamond-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="fact-info">
+                    <h3 class="counter" data-target="10">0</h3>
+                    <p>Active Users</p>
+                </div>
+            </div>
+
+            <!-- Fact 2: Messages -->
+            <div class="fact-item">
+                <div class="diamond-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="fact-info">
+                    <h3 class="counter" data-target="200">0</h3>
+                    <p>Daily Messages</p>
+                </div>
+            </div>
+
+            <!-- Fact 3: Meetings -->
+            <div class="fact-item">
+                <div class="diamond-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div class="fact-info">
+                    <h3 class="counter" data-target="2">0</h3>
+                    <p>Global Servers</p>
+                </div>
+            </div>
+
+            <!-- Fact 4: Coffee -->
+            <div class="fact-item">
+                <div class="diamond-icon">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <div class="fact-info">
+                    <h3 class="counter" data-target="100">0</h3>
+                    <p>Daily Tasks</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+ <!-- fun facts End -->
+
+ <!-- Join US Start  -->
+  <!-- Join Us Section -->
+<section id="join-us" class="join-premium-section">
+    <div class="container-full">
+        
+        <!-- Header -->
+        <div class="header-content">
+            <h2 class="reveal">JOIN US</h2>
+            <div class="diamond-divider">
+                <span></span><i class="fas fa-share-alt"></i><span></span>
+            </div>
+            <p>Follow us on our social networks to stay updated</p>
+        </div>
+
+        <!-- Social Icons Wrapper -->
+        <div class="social-links-wrapper">
+            
+            <!-- Facebook -->
+            <a href="https://web.facebook.com/profile.php?id=61589339551161" class="social-item-link" target="_blank">
+                <div class="social-diamond">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+            </a>
+
+            <!-- GitHub -->
+            <a href="https://github.com/settings/profile" class="social-item-link" target="_blank">
+                <div class="social-diamond">
+                    <i class="fab fa-github"></i>
+                </div>
+            </a>
+
+            <!-- Twitter -->
+            <a href="https://www.youtube.com/" class="social-item-link" target="_blank">
+                <div class="social-diamond">
+                    <i class="fab fa-twitter"></i>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+ <!-- Join US End  -->
+
+ <!-- contacts Start  -->
+      <section id="contact" class="contact-section-dark">
+    <div class="map-overlay-bg"></div>
+    <div class="container-full">
+        
+        <!-- Header -->
+        <div class="header-content light">
+            <h2>CONTACTS</h2>
+            <div class="diamond-divider">
+                <span></span><i class="fas fa-map-marked-alt"></i><span></span>
+            </div>
+            <p>All to contact us</p>
+        </div>
+
+        <!-- Contact Content Grid -->
+        <div class="contact-main-grid">
+            
+            <!-- Left Side: Address -->
+            <div class="address-column">
+                <h3>Our Address</h3>
+                <div class="address-list">
+                    <div class="address-item">
+                        <div class="icon-diamond-small"><i class="fas fa-map-marker-alt"></i></div>
+                        <p>Egypt, Giza<br>Haram 1288</p>
+                    </div>
+                    <div class="address-item">
+                        <div class="icon-diamond-small"><i class="fas fa-phone-alt"></i></div>
+                        <p>1-234-456-7890</p>
+                    </div>
+                    <div class="address-item">
+                        <div class="icon-diamond-small"><i class="fas fa-print"></i></div>
+                        <p>1-234-456-90</p>
+                    </div>
+                    <div class="address-item">
+                        <div class="icon-diamond-small"><i class="fas fa-envelope"></i></div>
+                        <p>virtualoffice.rafiq@gmail.com</p>
+                    </div>
+                    <div class="address-item">
+                        <div class="icon-diamond-small"><i class="fab fa-skype"></i></div>
+                        <p>RafiQ-Web-Designs</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Form -->
+            <div class="form-column">
+                <h3>Write to us</h3>
+                <form action="https://formspree.io/f/xykopgkv" method="POST" class="pro-form">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="E-mail" required>
+                    <input type="text" name="subject" placeholder="Subject" required>
+                    <textarea name="message" placeholder="Message" rows="5" required></textarea>
+                    <button type="submit" class="full-send-btn">Send</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+ <!-- contact End -->
+
+
+
+<!-- Footer Start  -->
+ <!-- Footer Section -->
+<footer class="main-footer">
+    <div class="container-footer">
+        <p>Copyright &copy; 2026 - <span>RafiQ</span>. All rights reserved.</p>
+        
+        
+    </div>
+</footer>
+<!-- Footer End -->
+
+
+ <!-- Socum AI Bot -->
+
+
+<div id="socum-ai-launcher" class="socum-chat-launcher">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="AI Bot">
+</div>
+
+<div id="socum-ai-window" class="socum-chat-window socum-hidden">
+    <div class="socum-chat-header">
+        <div class="socum-bot-info">
+            <span class="socum-status-dot"></span>
+            <span>RafiQ AI Assistant</span>
+        </div>
+        <button id="socum-close-chat" class="close_button">&times;</button>
+    </div>
+    <div id="socum-chat-body" class="socum-chat-body">
+   
+    </div>
+    <div class="socum-chat-footer">
+        <input type="text" id="socum-chat-input" placeholder="How can I help you?">
+        <button id="socum-send-btn">➤</button>
+    </div>
+</div>
+<div id="toast-container"></div>
+
+<script src="JS/rafiq-deploy-config.js"></script>
+<script src="JS/master.js"></script>
+</body>
+</html>

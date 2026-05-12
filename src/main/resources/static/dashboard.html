@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Socum</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="CSS/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<body class="workspace-ui">
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        <img src="images/logo.png">
+    </div>
+    <span class="Raf">RafiQ</span>
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="main.html">Home</a>
+        <a href="room.html">Rooms</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="statistics.html">Statistics</a>
+        <a href="employees.html">Employees</a>
+    </div>
+
+    <div class="notification-bell" id="notificationBell">
+        <button class="notification-bell-btn" type="button" onclick="toggleNotifDropdown()" aria-label="Notifications">
+            <i class="fa-solid fa-bell" id="bellIcon"></i>
+            <span id="notifBadge" class="notif-badge">0</span>
+        </button>
+        <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-dropdown-head">
+                <span>Notifications</span>
+                <div class="notif-head-actions">
+                    <button type="button" onclick="markAllNotificationsRead(event)">Read all</button>
+                    <button type="button" onclick="clearAllNotifications(event)">Clear</button>
+                </div>
+            </div>
+            <ul id="notifList" class="notif-list"></ul>
+        </div>
+    </div>
+
+    <a href="login.html" class="login_button">Login</a>
+    <a href="login.html" class="signup_button">Sign Up</a>
+
+
+</nav>
+
+
+
+<!-- dark mode Start -->
+                <div id="themeWidget" class="theme-widget">
+        
+                <span class="icon sun">
+            <i class="fa-solid fa-sun"></i>
+            </span>
+
+            <label class="switch">
+            <input type="checkbox" id="darkToggle">
+            <span class="slider"></span>
+            </label>
+
+            <span class="icon moon">
+            <i class="fa-solid fa-moon"></i>
+            </span>
+
+        </div>
+        <!-- dark mode End -->
+
+
+
+        
+<!-- DASHBOARD CONTENT -->
+<section class="dashboard-container app-shell dashboard-page">
+    <div class="dashboard-hero">
+        <div>
+            <span class="eyebrow">Workspace overview</span>
+            <h1>Dashboard</h1>
+            <p>Welcome back. Track team activity, open work, and delivery progress from one clean view.</p>
+        </div>
+        <a href="tasks.html" class="hero-action">
+            <i class="fa-solid fa-plus"></i>
+            New Task
+        </a>
+    </div>
+
+    <div class="dashboard-stats">
+        <button class="stat-box stat-primary stat-link" type="button" data-task-filter="all" aria-label="Open all tasks">
+            <span class="stat-icon"><i class="fa-solid fa-list-check"></i></span>
+            <h3>Total Tasks</h3>
+            <p id="totalTasks">0</p>
+            <small>Open task board</small>
+        </button>
+
+        <button class="stat-box stat-link" type="button" data-task-filter="completed" aria-label="Open completed tasks">
+            <span class="stat-icon"><i class="fa-solid fa-circle-check"></i></span>
+            <h3>Completed</h3>
+            <p id="completedTasks">0</p>
+            <small id="completedTasksPercent">0% of total</small>
+        </button>
+
+        <button class="stat-box stat-link" type="button" data-task-filter="pending" aria-label="Open pending tasks">
+            <span class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></span>
+            <h3>Pending</h3>
+            <p id="pendingTasks">0</p>
+            <small id="pendingTasksPercent">0% of total</small>
+        </button>
+
+        <button class="stat-box" id="employeesStat" type="button" aria-label="Open employees page">
+            <span class="stat-icon"><i class="fa-solid fa-users"></i></span>
+            <h3>Employees</h3>
+            <p id="totalEmployees">0</p>
+            <small>Manage team capacity</small>
+        </button>
+    </div>
+
+    <div class="dashboard-grid">
+        <section class="insight-panel progress-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="eyebrow">Performance</span>
+                    <h2 id="performanceTitle">Completion Rate</h2>
+                </div>
+                <strong id="completionRate">0%</strong>
+            </div>
+            <div class="progress-track">
+                <span id="completionBar"></span>
+            </div>
+            <p id="performanceSummary">Completed tasks compared with all assigned tasks.</p>
+            <div id="managerPerformanceMeta" class="manager-performance-meta"></div>
+        </section>
+
+        <section class="insight-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="eyebrow">Focus</span>
+                    <h2 id="focusTitle">Needs Attention</h2>
+                </div>
+                <a href="statistics.html">View stats</a>
+            </div>
+            <div id="recentTaskPreview" class="recent-task-preview">No tasks loaded yet.</div>
+        </section>
+    </div>
+</section>
+
+ <!-- Socum AI Bot -->
+
+
+<div id="socum-ai-launcher" class="socum-chat-launcher">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="AI Bot">
+</div>
+
+<div id="socum-ai-window" class="socum-chat-window socum-hidden">
+    <div class="socum-chat-header">
+        <div class="socum-bot-info">
+            <span class="socum-status-dot"></span>
+            <span>RafiQ AI Assistant</span>
+        </div>
+        <button id="socum-close-chat" class="close_button">&times;</button>
+    </div>
+    <div id="socum-chat-body" class="socum-chat-body">
+   
+    </div>
+    <div class="socum-chat-footer">
+        <input type="text" id="socum-chat-input" placeholder="How can I help you?">
+        <button id="socum-send-btn">➤</button>
+    </div>
+</div>
+<div id="toast-container"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="JS/rafiq-deploy-config.js"></script>
+<script src="JS/master.js"></script>
+</body>
+
+</html>

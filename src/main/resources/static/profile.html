@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Socum</title>
+
+    <!--
+        EARLY AUTH + THEME CHECK
+        Runs before first paint so:
+          1. Logged-in users never see the login/signup buttons flash.
+          2. Dark theme is applied immediately — no white flash.
+    -->
+    <!-- youssef wael was here -->
+    <script>
+        (function () {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+            if (localStorage.getItem("theme") === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        })();
+    </script>
+
+    <!-- Hide auth buttons when logged-in (inline so it fires before render) -->
+    <style>
+        .logged-in .login_button,
+        .logged-in .signup_button { display: none !important; }
+    </style>
+
+    <!-- Global site stylesheet -->
+    <link rel="stylesheet" href="CSS/master.css">
+
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- Extra fonts for the profile cards -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- ===========
+     NAVBAR
+     =========== -->
+<nav class="navbar">
+
+    <div class="logo">
+        <img src="images/logo.png" alt="RafiQ logo">
+    </div>
+    <span class="Raf">RafiQ</span>
+
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="main.html">Home</a>
+        <a href="profile.html" >Profile</a>
+    </div>
+
+    <!-- Shown only when NOT logged in -->
+    <a href="login.html" class="login_button">Login</a>
+    <a href="login.html" class="signup_button">Sign Up</a>
+
+    <!-- Nav avatar — master.js → loadNavbarProfile() fills these -->
+    <a class="nav-profile" href="profile.html">
+        <div class="nav-avatar">
+            <img id="navUserAvatar" src="images/default.png" alt="avatar">
+        </div>
+        <span id="navUserName">Guest</span>
+    </a>
+
+</nav>
+
+
+<!-- ================================================================
+     DARK MODE WIDGET
+     ================================================================ -->
+<div id="themeWidget" class="theme-widget">
+    <span class="icon sun"><i class="fa-solid fa-sun"></i></span>
+    <label class="switch">
+        <input type="checkbox" id="darkToggle">
+        <span class="slider"></span>
+    </label>
+    <span class="icon moon"><i class="fa-solid fa-moon"></i></span>
+</div>
+
+
+<!-- ================================================================
+     HIDDEN FILE INPUTS
+     IDs must match master.js exactly:
+       #imageInput  → profile photo file picker
+       #coverInput  → cover photo file picker
+     ================================================================ -->
+<input type="file" id="imageInput" accept="image/*" hidden>
+<input type="file" id="coverInput" accept="image/*" hidden>
+
+
+<!-- ================================================================
+     PAGE BODY
+     ================================================================ -->
+<div class="profile-page">
+
+    <!-- COVER BANNER
+         id="cover" is used by master.js to set background-image
+         after the user picks a cover photo.
+    -->
+    <div class="cover-banner" id="cover"></div>
+
+
+    <div class="profile-layout">
+
+        <!-- ============================================================
+             LEFT — PROFILE CARD
+             ============================================================ -->
+        <div class="profile-card">
+
+            <!-- AVATAR BOX
+                 All IDs match master.js expectations exactly so the
+                 existing upload / remove / compress logic keeps working.
+            -->
+            <div class="avatar-box">
+
+                <!-- Profile photo — src updated by master.js on upload -->
+                <img id="profileImage" src="images/default.png" alt="Profile photo">
+
+                <!-- Camera button — master.js: cameraBtn.onclick toggles uploadMenu -->
+                <label class="upload-btn" id="cameraBtn" title="Change photo">
+                    <i class="fa fa-camera"></i>
+                </label>
+
+                <!-- Upload menu — master.js shows/hides this on camera click -->
+                <div class="upload-menu" id="uploadMenu">
+
+                    <!-- Profile photo actions -->
+                    <div id="chooseProfile" class="choose-item">
+                        <i class="fa fa-user"></i> Change Profile Photo
+                    </div>
+                    <div onclick="removeProfilePhoto()" class="remove-item">
+                        <i class="fa fa-trash"></i> Remove Profile Photo
+                    </div>
+
+                    <hr style="border:0;border-top:1px solid #eee;margin:6px 0;">
+
+                    <!-- Cover photo actions -->
+                    <div id="chooseCover" class="choose-item">
+                        <i class="fa fa-image"></i> Change Cover Photo
+                    </div>
+                    <div onclick="removeCoverPhoto()" class="remove-item">
+                        <i class="fa fa-trash"></i> Remove Cover Photo
+                    </div>
+
+                </div>
+            </div>
+            <!-- / avatar-box -->
+
+            <!-- Display name — master.js writes to #displayName -->
+            <p class="pc-name" id="displayName">Your Name</p>
+
+            <!-- Role + Staff ID — written by populateStunningProfileData() in master.js -->
+            <p class="pc-role"    id="introRole">Developer</p>
+            <p class="pc-staffid" id="introStaffId">Staff ID: —</p>
+
+            <!-- Quick stats
+                 completedTasksCount, teamRoomsCount, activityScore
+                 are all filled by populateStunningProfileData() in master.js
+            -->
+            <div class="pc-stats">
+                <div class="pc-stat">
+                    <strong id="completedTasksCount">0</strong>
+                    <span>Tasks Done</span>
+                </div>
+                <div class="pc-stat">
+                    <strong id="teamRoomsCount">0</strong>
+                    <span>Rooms</span>
+                </div>
+                <div class="pc-stat">
+                    <strong id="activityScore">—</strong>
+                    <span>Score</span>
+                </div>
+            </div>
+
+            
+
+
+            <!-- Social connect links -->
+            <div class="pc-links">
+            <a href="#" class="pc-link" id="linkGithub" target="_blank" rel="noopener noreferrer">
+                <span><i class="fa-brands fa-github" style="margin-right:8px;"></i>GitHub</span>
+                <i class="fa fa-arrow-up-right-from-square" style="font-size:11px;opacity:0.5;"></i>
+            </a>
+            <a href="#" class="pc-link" id="linkTwitter" target="_blank" rel="noopener noreferrer">
+                <span><i class="fa-brands fa-x-twitter" style="margin-right:8px;"></i>Twitter / X</span>
+                <i class="fa fa-arrow-up-right-from-square" style="font-size:11px;opacity:0.5;"></i>
+            </a>
+            <a href="#" class="pc-link" id="linkLinkedin" target="_blank" rel="noopener noreferrer">
+                <span><i class="fa-brands fa-linkedin" style="margin-right:8px;"></i>LinkedIn</span>
+                <i class="fa fa-arrow-up-right-from-square" style="font-size:11px;opacity:0.5;"></i>
+            </a>
+        </div>
+
+        </div>
+        <!-- / profile-card -->
+
+
+        <!-- ============================================================
+             RIGHT — MAIN CONTENT (tabs)
+             ============================================================ -->
+        <div class="profile-main">
+
+            <!-- TAB STRIP
+                 We use switchTab() (defined below) instead of master.js
+                 showTab() to avoid naming collisions.
+            -->
+            <div class="profile-tabs">
+                <button class="active" onclick="switchTab('tab-about', this)">
+                    <i class="fa fa-user" style="margin-right:6px;"></i>About
+                </button>
+                <button onclick="switchTab('tab-posts', this)">
+                    <i class="fa fa-newspaper" style="margin-right:6px;"></i>Posts
+                </button>
+                <button onclick="switchTab('tab-edit', this)">
+                    <i class="fa fa-pen" style="margin-right:6px;"></i>Edit Profile
+                </button>
+            </div>
+
+
+            <!-- ---- TAB: ABOUT ---- -->
+            <!-- ---- TAB: ABOUT ---- -->
+            <div id="tab-about" class="tab-panel active">
+
+                <!-- Bio — id="profileBio" is filled by loadProfileExtended() -->
+                <div class="info-card">
+                    <h3><i class="fa fa-circle-info"></i> About</h3>
+                    <p class="bio-text" id="profileBio">—</p>
+                </div>
+
+                <!-- Skills — id="profileSkillsDisplay" is re-rendered by loadProfileExtended() -->
+                <div class="info-card">
+                    <h3><i class="fa fa-star"></i> Skills</h3>
+                    <div class="skills-wrap" id="profileSkillsDisplay">
+                        <span style="opacity:0.5;font-size:13px;">No skills added yet.</span>
+                    </div>
+                </div>
+
+                <!-- Experience — id="profileExpDisplay" is re-rendered by loadProfileExtended() -->
+                <div class="info-card">
+                    <h3><i class="fa fa-briefcase"></i> Experience</h3>
+                    <div class="exp-list" id="profileExpDisplay">
+                        <span style="opacity:0.5;font-size:13px;">No experience added yet.</span>
+                    </div>
+                </div>
+
+            </div>
+            <!-- / tab-about -->
+            <!-- / tab-about -->
+
+
+            <!-- ---- TAB: POSTS ---- -->
+            <div id="tab-posts" class="tab-panel">
+
+                <!--
+                    Create post box.
+                    addPost() is defined in master.js and reads from #postInput.
+                    The feed is rendered into #postList by master.js renderFeed().
+                -->
+                <div class="create-post-box">
+                    <textarea id="postInput" placeholder="What's on your mind?"></textarea>
+
+                    <!-- media preview shown before submitting -->
+                    <div id="postMediaPreview" style="display:none; margin-top:10px; position:relative;">
+                        <img id="postImgPreview"   style="display:none; max-width:100%; border-radius:10px; max-height:320px; object-fit:cover;">
+                        <video id="postVidPreview" style="display:none; max-width:100%; border-radius:10px; max-height:320px;" controls></video>
+                        <button onclick="clearPostMedia()" style="position:absolute;top:6px;right:6px;background:#ff4d4d;color:white;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">×</button>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap;">
+                        <!-- hidden file input -->
+                        <input type="file" id="postMediaInput" accept="image/*,video/*" hidden onchange="previewPostMedia(this)">
+
+                        <button class="post-btn" onclick="document.getElementById('postMediaInput').click()" style="background:var(--dark-bg);color:var(--accent-yellow);">
+                            <i class="fa fa-image" style="margin-right:6px;"></i>Photo / Video
+                        </button>
+                        <button class="post-btn" onclick="addPost()">
+                            <i class="fa fa-paper-plane" style="margin-right:6px;"></i>Post
+                        </button>
+                    </div>
+                </div>
+
+                <!-- master.js renderFeed() injects post cards here -->
+                <div id="postList"></div>
+
+            </div>
+            <!-- / tab-posts -->
+
+
+            <!-- ---- TAB: EDIT PROFILE ---- -->
+<div id="tab-edit" class="tab-panel">
+
+    <!-- Basic info (name + email — already handled by master.js saveProfile()) -->
+    <div class="info-card">
+        <h3><i class="fa fa-pen-to-square"></i> Basic Info</h3>
+
+        <div class="form-row">
+            <div class="form-field">
+                <label>Full Name</label>
+                <input type="text" id="nameInput" placeholder="Your full name">
+            </div>
+            <div class="form-field">
+                <label>Email</label>
+                <input type="email" id="emailInput" placeholder="your@email.com">
+            </div>
+        </div>
+
+        <!-- Staff ID — read-only, fetched from sessionStorage -->
+        <div class="form-field" style="margin-bottom:14px;">
+            <label>Staff ID (read-only)</label>
+            <input type="text" id="staffIdDisplay" placeholder="—" readonly
+                   style="opacity:0.6;cursor:not-allowed;">
+        </div>
+
+        <p style="font-size:12px;color:var(--white-writable);opacity:0.6;margin-bottom:20px;">
+            Current email on file: <strong id="displayEmail"></strong>
+        </p>
+
+        <!-- Saves name + email via existing master.js saveProfile() -->
+        <button class="save-btn" onclick="saveProfile()">
+            <i class="fa fa-floppy-disk" style="margin-right:6px;"></i>Save Basic Info
+        </button>
+    </div>
+
+    <!-- Extended info (bio, skills, experience — new saveProfileExtended()) -->
+    <div class="info-card">
+        <h3><i class="fa fa-address-card"></i> About Me</h3>
+
+        <div class="form-field" style="margin-bottom:14px;">
+            <label>Bio</label>
+            <!-- id="bioInput" read by saveProfileExtended() -->
+            <textarea id="bioInput" placeholder="Tell people about yourself…" style="min-height:90px;"></textarea>
+        </div>
+
+        <div class="form-field" style="margin-bottom:14px;">
+            <label>Skills <span style="font-weight:400;opacity:0.6;">(comma-separated)</span></label>
+            <!-- id="skillsInput" — e.g. "Figma, React, Leadership" -->
+            <input type="text" id="skillsInput" placeholder="e.g. Figma, React, Leadership">
+        </div>
+
+        <!-- Experience entries — up to 3, kept simple -->
+        <div style="margin-bottom:6px;">
+            <label style="font-size:12px;font-weight:700;opacity:0.7;text-transform:uppercase;letter-spacing:.5px;">
+                Experience (up to 3 entries)
+            </label>
+        </div>
+
+        <!-- Entry 1 -->
+        <div class="form-row" style="margin-bottom:10px;">
+            <div class="form-field">
+                <input type="text" id="exp1Role"    placeholder="Role — Company">
+            </div>
+            <div class="form-field">
+                <input type="text" id="exp1Years"   placeholder="e.g. 2020 – Present">
+            </div>
+        </div>
+
+        <!-- Entry 2 -->
+        <div class="form-row" style="margin-bottom:10px;">
+            <div class="form-field">
+                <input type="text" id="exp2Role"    placeholder="Role — Company">
+            </div>
+            <div class="form-field">
+                <input type="text" id="exp2Years"   placeholder="e.g. 2018 – 2020">
+            </div>
+        </div>
+
+        <!-- Entry 3 -->
+        <div class="form-row" style="margin-bottom:20px;">
+            <div class="form-field">
+                <input type="text" id="exp3Role"    placeholder="Role — Company">
+            </div>
+            <div class="form-field">
+                <input type="text" id="exp3Years"   placeholder="e.g. 2015 – 2018">
+            </div>
+        </div>
+
+        <!-- Calls saveProfileExtended() defined in the <script> below master.js -->
+        <button class="save-btn" onclick="saveProfileExtended()">
+            <i class="fa fa-floppy-disk" style="margin-right:6px;"></i>Save About Me
+        </button>
+    </div>
+
+    <div class="info-card">
+        <h3><i class="fa fa-link"></i> Social Links</h3>
+
+        <div class="form-field" style="margin-bottom:12px;">
+            <label>GitHub URL</label>
+            <input type="url" id="linkGithubInput" placeholder="https://github.com/yourname">
+        </div>
+        <div class="form-field" style="margin-bottom:12px;">
+            <label>Twitter / X URL</label>
+            <input type="url" id="linkTwitterInput" placeholder="https://twitter.com/yourname">
+        </div>
+        <div class="form-field" style="margin-bottom:20px;">
+            <label>LinkedIn URL</label>
+            <input type="url" id="linkLinkedinInput" placeholder="https://linkedin.com/in/yourname">
+        </div>
+
+        <button class="save-btn" onclick="saveSocialLinks()">
+            <i class="fa fa-floppy-disk" style="margin-right:6px;"></i>Save Links
+        </button>
+    </div>
+
+    <!-- Security -->
+    <div class="info-card">
+        <h3><i class="fa fa-lock"></i> Security</h3>
+        <button class="save-btn btn-outline-dark" onclick="openChangePasswordPage()">
+            <i class="fa fa-key" style="margin-right:6px;"></i>Change Password
+        </button>
+    </div>
+
+</div>
+<!-- / tab-edit -->
+
+            </div>
+            <!-- / tab-edit -->
+
+        </div>
+        <!-- / profile-main -->
+
+    </div>
+    <!-- / profile-layout -->
+
+</div>
+<!-- / profile-page -->
+
+<!-- socum ai bot -->
+ 
+<div id="socum-ai-launcher" class="socum-chat-launcher">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="AI Bot">
+</div>
+
+<div id="socum-ai-window" class="socum-chat-window socum-hidden">
+    <div class="socum-chat-header">
+        <div class="socum-bot-info">
+            <span class="socum-status-dot"></span>
+            <span>RafiQ AI Assistant</span>
+        </div>
+        <button id="socum-close-chat">&times;</button>
+    </div>
+    <div id="socum-chat-body" class="socum-chat-body"></div>
+    <div class="socum-chat-footer">
+        <input type="text" id="socum-chat-input" placeholder="How can I help you?">
+        <button id="socum-send-btn">➤</button>
+    </div>
+</div>
+<div id="toast-container"></div>
+
+
+<!-- master.js handles: dark mode, avatar upload/remove, profile save, posts, AI bot, navbar -->
+<script src="JS/rafiq-deploy-config.js"></script>
+<script src="JS/master.js?v=20260510-profile-fix"></script>
+
+<script>
+   /* ---- tab switcher (unchanged) ---- */
+    function switchTab(panelId, clickedBtn) {
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        document.querySelectorAll(".profile-tabs button").forEach(b => b.classList.remove("active"));
+        document.getElementById(panelId).classList.add("active");
+        clickedBtn.classList.add("active");
+    }
+
+    /*
+        Fill the read-only Staff ID field in the Edit tab.
+        Runs after master.js has loaded (which defines getAuthUser).
+    */
+    document.addEventListener("DOMContentLoaded", () => {
+        const user = getAuthUser();
+        const el = document.getElementById("staffIdDisplay");
+        if (el && user?.staffId) el.value = user.staffId;
+        if (typeof populateStunningProfileData === "function") {
+            populateStunningProfileData();
+        }
+        if (typeof loadProfileExtended === "function") {
+            loadProfileExtended();
+        }
+        if (new URLSearchParams(window.location.search).get("tab") === "posts") {
+            const postsButton = document.querySelector(".profile-tabs button[onclick*='tab-posts']");
+            if (postsButton) switchTab("tab-posts", postsButton);
+        }
+    });
+</script>
+
+</body>
+</html>

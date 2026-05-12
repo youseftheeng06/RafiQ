@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics - Socum</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="CSS/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="workspace-ui">
+
+<nav class="navbar">
+    <div class="logo"><img src="images/logo.png"></div>
+    <span class="Raf">RafiQ</span>
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="main.html">Home</a>
+        <a href="room.html">Rooms</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="statistics.html">Statistics</a>
+  
+    </div>
+
+    <div class="notification-bell" id="notificationBell">
+        <button class="notification-bell-btn" type="button" onclick="toggleNotifDropdown()" aria-label="Notifications">
+            <i class="fa-solid fa-bell" id="bellIcon"></i>
+            <span id="notifBadge" class="notif-badge">0</span>
+        </button>
+        <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-dropdown-head">
+                <span>Notifications</span>
+                <div class="notif-head-actions">
+                    <button type="button" onclick="markAllNotificationsRead(event)">Read all</button>
+                    <button type="button" onclick="clearAllNotifications(event)">Clear</button>
+                </div>
+            </div>
+            <ul id="notifList" class="notif-list"></ul>
+        </div>
+    </div>
+
+    <a href="login.html" class="login_button">Login</a>
+    <a href="login.html" class="signup_button">Sign Up</a>
+</nav>
+
+<div id="themeWidget" class="theme-widget">
+    <span class="icon sun"><i class="fa-solid fa-sun"></i></span>
+    <label class="switch">
+        <input type="checkbox" id="darkToggle">
+        <span class="slider"></span>
+    </label>
+    <span class="icon moon"><i class="fa-solid fa-moon"></i></span>
+</div>
+
+<main class="statistics-container app-shell" id="statisticsPage">
+    <div class="dashboard-hero">
+        <div>
+            <span class="eyebrow">Project analytics</span>
+            <h1>Statistics</h1>
+            <p>Understand workload, completion, and team capacity with live numbers from the current project data.</p>
+        </div>
+        <div class="hero-actions">
+            <button type="button" class="hero-action hero-action-button" onclick="exportStatisticsPdf()">
+                <i class="fa-solid fa-file-pdf"></i>
+                Export PDF
+            </button>
+            <a href="dashboard.html" class="hero-action">
+                <i class="fa-solid fa-chart-line"></i>
+                Dashboard
+            </a>
+        </div>
+    </div>
+
+    <section class="stats-layout">
+        <div class="insight-panel stats-score">
+            <span class="eyebrow">Completion</span>
+            <strong id="statsCompletionRate">0%</strong>
+            <div class="progress-track">
+                <span id="statsCompletionBar"></span>
+            </div>
+            <p id="statsSummary">No task data loaded yet.</p>
+        </div>
+
+        <div class="stats-metrics">
+            <div class="stat-box">
+                <span class="stat-icon"><i class="fa-solid fa-list-check"></i></span>
+                <h3>Total Tasks</h3>
+                <p id="statsTotalTasks">0</p>
+            </div>
+            <div class="stat-box">
+                <span class="stat-icon"><i class="fa-solid fa-circle-check"></i></span>
+                <h3>Completed</h3>
+                <p id="statsCompletedTasks">0</p>
+            </div>
+            <div class="stat-box">
+                <span class="stat-icon"><i class="fa-solid fa-spinner"></i></span>
+                <h3>In Progress</h3>
+                <p id="statsProgressTasks">0</p>
+            </div>
+            <div class="stat-box">
+                <span class="stat-icon"><i class="fa-solid fa-clock"></i></span>
+                <h3>Pending</h3>
+                <p id="statsPendingTasks">0</p>
+            </div>
+            <div class="stat-box manager-stat">
+                <span class="stat-icon"><i class="fa-solid fa-user-tie"></i></span>
+                <h3>Company Employees</h3>
+                <p id="statsEmployeesCount">0</p>
+            </div>
+            <div class="stat-box manager-stat">
+                <span class="stat-icon"><i class="fa-solid fa-paper-plane"></i></span>
+                <h3>Created By Me</h3>
+                <p id="statsCreatedByMe">0</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="insight-panel">
+        <div class="panel-heading">
+            <div>
+                <span class="eyebrow">Task mix</span>
+                <h2>Status Breakdown</h2>
+            </div>
+            <a href="tasks.html">Open tasks</a>
+        </div>
+        <div class="status-bars">
+            <div>
+                <button type="button" class="status-bar-link" onclick="goToTasksByStatus('completed')">
+                    <span>Completed</span>
+                    <strong id="completedStatusPercent">0%</strong>
+                </button>
+                <div class="progress-track"><span id="completedStatusBar"></span></div>
+            </div>
+            <div>
+                <button type="button" class="status-bar-link" onclick="goToTasksByStatus('in_progress')">
+                    <span>In Progress</span>
+                    <strong id="progressStatusPercent">0%</strong>
+                </button>
+                <div class="progress-track"><span id="progressStatusBar"></span></div>
+            </div>
+            <div>
+                <button type="button" class="status-bar-link" onclick="goToTasksByStatus('pending')">
+                    <span>Pending</span>
+                    <strong id="pendingStatusPercent">0%</strong>
+                </button>
+                <div class="progress-track"><span id="pendingStatusBar"></span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="insight-panel">
+        <div class="panel-heading">
+            <div>
+                <span class="eyebrow">Visual analytics</span>
+                <h2 id="chartTitle">Task Progress Chart</h2>
+            </div>
+            <a href="tasks.html">Open tasks</a>
+        </div>
+        <div id="taskChart" class="task-chart"></div>
+    </section>
+
+    <section class="insight-panel">
+        <div class="panel-heading">
+            <div>
+                <span class="eyebrow">Team workload</span>
+                <h2>Assignee Progress</h2>
+            </div>
+            <a href="tasks.html">Review all</a>
+        </div>
+        <div id="assigneeStatsList" class="assignee-stats-list">No task data loaded yet.</div>
+    </section>
+</main>
+<div id="toast-container"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="JS/rafiq-deploy-config.js"></script>
+<script src="JS/master.js"></script>
+</body>
+</html>

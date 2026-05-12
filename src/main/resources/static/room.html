@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rooms - Socum</title>
+    <script>
+        (function() {
+            if (sessionStorage.getItem("authUser")) {
+                document.documentElement.classList.add("logged-in");
+            }
+        })();
+    </script>
+    <style>
+        .logged-in .login_button, 
+        .logged-in .signup_button 
+        {
+            display: none !important;
+        }
+    </style>
+    <link rel="stylesheet" href="CSS/master.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<body class="room-page">
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+
+    <div class="logo">
+        <img src="images/logo.png">
+    </div>
+
+    <span class="Raf">RafiQ</span>
+
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="main.html">Home</a>
+        <a href="settings.html">Settings</a>
+    </div>
+
+</nav>
+
+
+<!-- ================= DARK MODE ================= -->
+<div id="themeWidget" class="theme-widget">
+
+    <span class="icon sun">
+        <i class="fa-solid fa-sun"></i>
+    </span>
+
+    <label class="switch">
+        <input type="checkbox" id="darkToggle">
+        <span class="slider"></span>
+    </label>
+
+    <span class="icon moon">
+        <i class="fa-solid fa-moon"></i>
+    </span>
+
+</div>
+
+
+<!-- ================= APP ================= -->
+
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <div class="rooms-sidebar">
+        
+        <h2 class="h2">Rooms</h2>
+
+        
+
+        <div class="room-list" id="roomList"></div>
+
+        <button class="add-room manager-only" onclick="addRoom()">+ Add Room</button>
+
+    </div>
+
+
+    <!-- MAIN CHAT -->
+    <div class="main">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+    <h2 id="roomTitle">Select a room</h2>
+
+    
+    <div class="settings-wrapper">
+        <button class="settings-trigger" onclick="toggleSettingsMenu()">
+            <i class="fa-solid fa-gear"></i>
+        </button>
+        
+        <div id="settingsMenu" class="settings-dropdown">
+    <h5><i class="fa-solid fa-computer"></i> Choose Background</h5>
+    
+    <div class="upload-area">
+        
+        <input type="file" id="bgFileInput" hidden accept="image/*" onchange="handleFileSelect(event)">
+        
+       
+        <button class="custom-upload-btn" onclick="document.getElementById('bgFileInput').click()">
+            <i class="fa-solid fa-folder-open"></i> Upload from PC
+        </button>
+    </div>
+
+    <button class="reset-bg-btn" onclick="resetDefaultBg()">Reset Default</button>
+</div>
+    </div>
+
+    <button class="call-btn" onclick="startCall()">
+        <i class="fa-solid fa-video"></i> Call
+    </button>
+</div>
+
+
+        <!-- CHAT BOX -->
+        <div class="chat-box" id="chatBox"></div>
+
+        <div class="input-box">
+
+            <!-- file upload -->
+            <input type="file" id="fileInput" hidden onchange="handleFile(event)">
+
+            <button class="icon-btn" onclick="document.getElementById('fileInput').click()">
+                <i class="fa-solid fa-paperclip"></i>
+            </button>
+
+          
+
+            <!-- message input -->
+            <input type="text" id="msgInput" placeholder="Type message...">
+
+              <!-- VOICE RECORD BUTTON -->
+                <button class="icon-btn vm-record-btn" id="recordBtn">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+                
+            <!-- send -->
+            <button onclick="sendMessage()">Send</button>
+
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT PANEL -->
+ <div class="right">
+
+    <h3 id="activeRoomName">No room selected</h3>
+
+    <div class="room-stats">
+        <p>Messages: <span id="msgCount">0</span></p>
+    </div>
+
+    <div class="room-members">
+        <h4>Members</h4>
+        <div class="member-actions">
+            <button class="btn" onclick="promptAddMember()" class="add_btn">Add Member</button>
+            <button class="btn" onclick="loadRoomMembers()" clas>Refresh</button>
+        </div>
+        <ul id="memberList">
+            <li>No members</li>
+        </ul>
+    </div>
+
+    <button onclick="clearChat()" class="btn danger">
+        Clear Chat
+    </button>
+
+</div>
+
+
+<!-- الكونتينر الخاص بمكالمة الفيديو على كامل الشاشة -->
+<div id="zegoCallOverlay" style="display:none; position:fixed; inset:0; background:#0b1220; z-index:9999;">
+    <div id="zegoCallRoot" style="width:100%; height:100%;"></div>
+</div>
+
+<div id="toast-container"></div>
+
+
+
+<!-- ================= SCRIPT ================= -->
+<script src="JS/rafiq-deploy-config.js"></script>
+<script src="JS/master.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+<script>
+
+    let stompClient = null;
+    let stompSubscription = null;
+    let connectedRoomId = null;
+    let stompConnectInFlight = null;
+
+    function getSelectedRoomId() {
+        if (typeof currentRoom !== "number" || !rooms[currentRoom]) return null;
+        return rooms[currentRoom].id ?? null;
+    }
+
+    function disconnectSocket() {
+        if (stompSubscription) {
+            stompSubscription.unsubscribe();
+            stompSubscription = null;
+        }
+
+        if (stompClient && stompClient.connected) {
+            stompClient.disconnect(() => {});
+        }
+
+        stompClient = null;
+        connectedRoomId = null;
+    }
+
+    /** @returns {Promise<boolean>} */
+    function connect(roomId) {
+        if (!roomId) return Promise.resolve(false);
+        if (connectedRoomId === roomId && stompClient?.connected) {
+            return Promise.resolve(true);
+        }
+        if (stompConnectInFlight && stompConnectInFlight.roomId === roomId) {
+            return stompConnectInFlight.promise;
+        }
+
+        disconnectSocket();
+
+        let settleTimer;
+        const promise = new Promise(function (resolve, reject) {
+            settleTimer = setTimeout(function () {
+                stompConnectInFlight = null;
+                disconnectSocket();
+                reject(new Error("Timed out waiting for chat (25s)"));
+            }, 25000);
+
+            let socket;
+            try {
+                socket = new SockJS(getBackendOrigin() + "/ws-office");
+                stompClient = Stomp.over(socket);
+                stompClient.debug = null;
+            } catch (e) {
+                clearTimeout(settleTimer);
+                stompConnectInFlight = null;
+                reject(e);
+                return;
+            }
+
+            stompClient.connect(
+                {},
+                function () {
+                    clearTimeout(settleTimer);
+                    stompConnectInFlight = null;
+                    connectedRoomId = roomId;
+                    stompSubscription = stompClient.subscribe(
+                        "/topic/room/" + roomId,
+                        function (msg) {
+                            const chatMessage = JSON.parse(msg.body);
+                            void displayMessage(chatMessage);
+                        },
+                    );
+                    resolve(true);
+                },
+                function (frame) {
+                    clearTimeout(settleTimer);
+                    stompConnectInFlight = null;
+                    disconnectSocket();
+                    var msg =
+                        frame &&
+                        (frame.headers && frame.headers.message
+                            ? frame.headers.message
+                            : frame.body);
+                    reject(new Error(msg ? String(msg) : "WebSocket rejected"));
+                },
+            );
+        });
+
+        stompConnectInFlight = { roomId: roomId, promise: promise };
+        return promise;
+    }
+
+    // بنحوّل الرسايل الجاية من الـ WebSocket لنفس شكل الـ UI الحالي
+    async function displayMessage(chatMessage) {
+        if (typeof currentRoom !== "number" || !rooms[currentRoom]) return;
+
+        const selectedRoomId = getSelectedRoomId();
+        if (selectedRoomId && chatMessage.roomId !== selectedRoomId) return;
+
+        rooms[currentRoom].messages = rooms[currentRoom].messages || [];
+
+        let nextMessage;
+        if (chatMessage.type === "FILE") {
+            const fileUrl = chatMessage.content?.startsWith("http")
+                ? chatMessage.content
+                : `${getBackendOrigin()}${chatMessage.content}`;
+
+            if (chatMessage.fileType?.startsWith("image/")) {
+                nextMessage = { type: "image", data: fileUrl, time: getTime12h(), senderName: chatMessage.senderName || "Unknown" };
+            } else if (chatMessage.fileType?.startsWith("video/")) {
+                nextMessage = { type: "video", data: fileUrl, time: getTime12h(), senderName: chatMessage.senderName || "Unknown" };
+            } else if (chatMessage.fileType?.startsWith("audio/")) {
+                nextMessage = { type: "audio", data: fileUrl, time: getTime12h(), senderName: chatMessage.senderName || "Unknown" };
+            } else {
+                nextMessage = { type: "file", name: chatMessage.fileName, data: fileUrl, time: getTime12h(), senderName: chatMessage.senderName || "Unknown" };
+            }
+        } else {
+            nextMessage = {
+                type: "text",
+                data: chatMessage.content,
+                time: getTime12h(),
+                senderName: chatMessage.senderName || "Unknown"
+            };
+        }
+
+        rooms[currentRoom].messages.push(nextMessage);
+
+        saveAll();
+        await renderMessages();
+        updateRoomInfo();
+    }
+
+    window.addEventListener("beforeunload", disconnectSocket);
+
+</script>
+<audio id="ringtone" src="images/WhatsApp Ptt 2026-04-01 at 8.35.48 PM.ogg" preload="auto"></audio>
+
+ <!-- Socum AI Bot -->
+
+
+<div id="socum-ai-launcher" class="socum-chat-launcher">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="AI Bot">
+</div>
+
+<div id="socum-ai-window" class="socum-chat-window socum-hidden">
+    <div class="socum-chat-header">
+        <div class="socum-bot-info">
+            <span class="socum-status-dot"></span>
+            <span>RafiQ AI Assistant</span>
+        </div>
+        <button id="socum-close-chat" class="close_button">&times;</button>
+    </div>
+    <div id="socum-chat-body" class="socum-chat-body">
+   
+    </div>
+    <div class="socum-chat-footer">
+        <input type="text" id="socum-chat-input" placeholder="How can I help you?">
+        <button id="socum-send-btn">➤</button>
+    </div>
+</div>
+</body>
+</html>

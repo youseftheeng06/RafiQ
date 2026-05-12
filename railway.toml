@@ -1,0 +1,9 @@
+# Railway picks this file when the service root is this directory.
+# Repo root deploy: create a Railway service with Root Directory set to . (current root).
+# or add a Dockerfile build with context = this folder.
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+restartPolicyType = "on_failure"
