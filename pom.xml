@@ -73,6 +73,10 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+		</dependency>
 		<!-- Changed on 28/04 at 11:56 AM: added the correct OAuth2 client starter for Google/GitHub social login -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
