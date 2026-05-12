@@ -6,15 +6,15 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(255) NOT NULL,
     active BOOLEAN NOT NULL,
     staff_id VARCHAR(255) NOT NULL UNIQUE,
-    profile_photo_data BLOB,
+    profile_photo_data BYTEA,
     profile_photo_type VARCHAR(255),
-    cover_photo_data BLOB,
+    cover_photo_data BYTEA,
     cover_photo_type VARCHAR(255)
 );
 
-ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_photo_data BLOB;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_photo_data BYTEA;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_photo_type VARCHAR(255);
-ALTER TABLE users ADD COLUMN IF NOT EXISTS cover_photo_data BLOB;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS cover_photo_data BYTEA;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS cover_photo_type VARCHAR(255);
 
 CREATE TABLE IF NOT EXISTS rooms (

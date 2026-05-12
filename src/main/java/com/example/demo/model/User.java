@@ -46,14 +46,14 @@ public class User {
     @Column(nullable = false, unique = true, length = 32)
     private String staffId;
 
-    @Column(name = "profile_photo_data")
+    @Column(name = "profile_photo_data", columnDefinition = "bytea")
     @JsonIgnore
     private byte[] profilePhotoData;
 
     @Column(name = "profile_photo_type")
     private String profilePhotoType;
 
-    @Column(name = "cover_photo_data")
+    @Column(name = "cover_photo_data", columnDefinition = "bytea")
     @JsonIgnore
     private byte[] coverPhotoData;
 

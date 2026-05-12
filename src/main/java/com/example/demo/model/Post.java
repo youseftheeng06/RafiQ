@@ -52,7 +52,7 @@ public class Post {
     @Column(name = "media_type")
     private String mediaType;
 
-    @Column(name = "media_data")
+    @Column(name = "media_data", columnDefinition = "bytea")
     @JsonIgnore
     private byte[] mediaData;
 
