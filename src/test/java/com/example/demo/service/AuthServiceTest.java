@@ -126,8 +126,6 @@ class AuthServiceTest {
                 .role("DEVELOPER")
                 .build();
 
-        when(userRepository.findByEmail("weak@example.com")).thenReturn(Optional.empty());
-
         RuntimeException exception = assertThrows(RuntimeException.class, () -> authService.register(registrationRequest));
 
         assertTrue(exception.getMessage().toLowerCase().contains("password"));
