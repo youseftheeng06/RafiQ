@@ -45,37 +45,40 @@ public class SecurityConfig {
     private String frontendBaseUrl;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthService authService) throws Exception {
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> oauthUserService = buildOauthUserService();
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthService authService, org.springframework.beans.factory.ObjectProvider<org.springframework.security.oauth2.client.registration.ClientRegistrationRepository> clientRegistrations) throws Exception {
+        org.springframework.security.oauth2.client.registration.ClientRegistrationRepository repo = clientRegistrations.getIfAvailable();
+        if (repo != null) {
+            OAuth2UserService<OAuth2UserRequest, OAuth2User> oauthUserService = buildOauthUserService();
 
-        http.oauth2Login(oauth -> oauth
-                .userInfoEndpoint(userInfo -> userInfo.userService(oauthUserService))
-                .successHandler((request, response, authentication) -> {
-                    OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-                    String email = oauth2User.getAttribute("email");
-                    String name = oauth2User.getAttribute("name");
-                    String login = oauth2User.getAttribute("login");
+            http.oauth2Login(oauth -> oauth
+                    .userInfoEndpoint(userInfo -> userInfo.userService(oauthUserService))
+                    .successHandler((request, response, authentication) -> {
+                        OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+                        String email = oauth2User.getAttribute("email");
+                        String name = oauth2User.getAttribute("name");
+                        String login = oauth2User.getAttribute("login");
 
-                    if ((name == null || name.isBlank()) && oauth2User.getAttribute("login") != null) {
-                        name = String.valueOf(login);
-                    }
+                        if ((name == null || name.isBlank()) && oauth2User.getAttribute("login") != null) {
+                            name = String.valueOf(login);
+                        }
 
-                    if (email == null || email.isBlank()) {
+                        if (email == null || email.isBlank()) {
+                            response.sendRedirect(frontendBaseUrl + "/login.html?oauth=error&message="
+                                    + URLEncoder.encode("GitHub did not provide an email address for this account. Make sure the app has email access or use an account with an accessible email.", StandardCharsets.UTF_8));
+                            return;
+                        }
+
+                        User appUser = authService.loginWithOAuth(email, name);
+                        String redirectQuery = authService.buildOauthSuccessQuery(appUser);
+                        response.sendRedirect(frontendBaseUrl + "/login.html?" + redirectQuery);
+                    })
+                    .failureHandler((request, response, exception) -> {
+                        log.error("OAuth login failed for [{}]: {}", request.getRequestURI(), exception.getMessage(), exception);
+                        String errorMessage = exception.getMessage() == null ? "OAuth login failed" : exception.getMessage();
                         response.sendRedirect(frontendBaseUrl + "/login.html?oauth=error&message="
-                                + URLEncoder.encode("GitHub did not provide an email address for this account. Make sure the app has email access or use an account with an accessible email.", StandardCharsets.UTF_8));
-                        return;
-                    }
-
-                    User appUser = authService.loginWithOAuth(email, name);
-                    String redirectQuery = authService.buildOauthSuccessQuery(appUser);
-                    response.sendRedirect(frontendBaseUrl + "/login.html?" + redirectQuery);
-                })
-                .failureHandler((request, response, exception) -> {
-                    log.error("OAuth login failed for [{}]: {}", request.getRequestURI(), exception.getMessage(), exception);
-                    String errorMessage = exception.getMessage() == null ? "OAuth login failed" : exception.getMessage();
-                    response.sendRedirect(frontendBaseUrl + "/login.html?oauth=error&message="
-                            + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8));
-                }));
+                                + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8));
+                    }));
+        }
         http
                 .csrf(AbstractHttpConfigurer::disable)
                     .cors(cors -> cors.configurationSource(request -> {
