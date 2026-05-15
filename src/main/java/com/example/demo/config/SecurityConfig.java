@@ -96,12 +96,8 @@ public class SecurityConfig {
                         return config;
                     }))
                     .authorizeHttpRequests(auth -> auth
-                            // Ensure H2 console is explicitly permitted if anyRequest().permitAll() is ever changed
-                            .requestMatchers("/h2-console/**").permitAll()
                             .anyRequest().permitAll()
                     )
-                    // Required for H2 Console to work in the browser
-                    .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                     .formLogin(AbstractHttpConfigurer::disable)
                     .httpBasic(AbstractHttpConfigurer::disable);
 
